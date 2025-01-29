@@ -1,0 +1,119 @@
+%CODE TO GENERATE THE SIGNAL WITH POSITIVE SNR
+clc;
+clear all;
+close all;
+
+Fs=1000;
+T=1;
+t=0:1/Fs:T-1/Fs;
+%t1=0:1/Fs:T;
+
+%signal generation (here, siusoidal signal)
+f_signal=10;    %frequency of the sisusoidal signal (Hz)
+A_signal=1;     %amplitue of the sinusoidal signal
+signal=A_signal*sin(2*pi*f_signal*t);
+plot(t,signal)
+
+%Noise generation
+SNR_db=20;
+noise_power=var(signal)/(10^(SNR_db/10));
+noise=sqrt(noise_power)*randn(size(t)); %generate AWGN 
+%power of a signal can be variance of signal when mean value of the signal
+%is zero
+%randn is to generate the random signal which is normally distributted 
+
+%Add noise to the signal
+noisy_signal=signal+noise;
+
+%plot the original 
+figure;
+subplot(2,1,1); %the figure environment will be divided in 2 rows and 1 coloumn and will be placed in first position
+plot(t,signal);
+title('Original Signal');
+
+subplot(2,1,2);
+plot(t,noisy_signal);
+title(['Noisy Signal (SNR=' num2str(SNR_db) 'dB)']);
+xlabel('Time (seconds)');
+
+%WITH NEGATIVE SNR
+clc;
+clear all;
+close all;
+
+Fs=1000;
+T=1;
+t=0:1/Fs:T-1/Fs;
+%t1=0:1/Fs:T;
+
+%signal generation (here, siusoidal signal)
+f_signal=10;    %frequency of the sisusoidal signal (Hz)
+A_signal=1;     %amplitue of the sinusoidal signal
+signal=A_signal*sin(2*pi*f_signal*t);
+plot(t,signal)
+
+%Noise generation
+SNR_db=-20;
+noise_power=var(signal)/(10^(SNR_db/10));
+noise=sqrt(noise_power)*randn(size(t)); %generate AWGN 
+%power of a signal can be variance of signal when mean value of the signal
+%is zero
+%randn is to generate the random signal which is normally distributted 
+
+%Add noise to the signal
+noisy_signal=signal+noise;
+
+%plot the original 
+figure;
+subplot(2,1,1); %the figure environment will be divided in 2 rows and 1 coloumn and will be placed in first position
+plot(t,signal);
+title('Original Signal');
+
+subplot(2,1,2);
+plot(t,noisy_signal);
+title(['Noisy Signal (SNR=' num2str(SNR_db) 'dB)']);
+xlabel('Time (seconds)');
+
+
+%WITH ZERO SNR
+clc;
+clear all;
+close all;
+
+Fs=1000;
+T=1;
+t=0:1/Fs:T-1/Fs;
+%t1=0:1/Fs:T;
+
+%signal generation (here, siusoidal signal)
+f_signal=10;    %frequency of the sisusoidal signal (Hz)
+A_signal=1;     %amplitue of the sinusoidal signal
+signal=A_signal*sin(2*pi*f_signal*t);
+plot(t,signal)
+
+%Noise generation
+SNR_db=0;
+noise_power=var(signal)/(10^(SNR_db/10));
+noise=sqrt(noise_power)*randn(size(t)); %generate AWGN 
+%power of a signal can be variance of signal when mean value of the signal
+%is zero
+%randn is to generate the random signal which is normally distributted 
+
+%Add noise to the signal
+noisy_signal=signal+noise;
+
+%plot the original 
+figure;
+subplot(2,1,1); %the figure environment will be divided in 2 rows and 1 coloumn and will be placed in first position
+plot(t,signal);
+title('Original Signal');
+
+subplot(2,1,2);
+plot(t,noisy_signal);
+title(['Noisy Signal (SNR=' num2str(SNR_db) 'dB)']);
+xlabel('Time (seconds)');
+
+
+
+
+
