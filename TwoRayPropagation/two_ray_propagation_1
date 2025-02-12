@@ -1,0 +1,53 @@
+clc;
+clear;
+close all;
+
+% Constants
+Pt = 1;                 % Transmitted Power (Watt)
+G_los = 1;              % Transmitter Antenna Gain
+G_ref = 1;              % Receiver Antenna Gain
+c = 3e8;                % Speed of light (m/s)
+f1 = 900e6;             % Frequency 1 (Hz)
+f2 = 2.4e9;             % Frequency 2 (Hz)
+lambda1 = c / f1;       % Wavelength for 900 MHz
+lambda2 = c / f2;       % Wavelength for 2.4 GHz
+ht = 50;                % Transmitter height (m)
+hr = 2;                 % Receiver height (m)
+L = 1;                  % System Loss Factor
+
+% Distance vector
+d = linspace(1, 1000, 1000); % Distance between transmitter and receiver (m)
+
+% Direct Path Distance
+d_los = sqrt(d.^2 + (ht - hr)^2);
+
+% Reflected Path Distance
+d_refl = sqrt(d.^2 + (ht + hr)^2);
+
+% Path Difference
+delta_d = d_refl - d_los;
+
+% Phase Difference
+phi1 = (2 * pi * delta_d) / lambda1;
+phi2 = (2 * pi * delta_d) / lambda2;
+
+% Reflection Coefficient (Assumed as -1 for ground reflection)
+Gamma = -1;
+
+% Two-Ray Ground Reflection Model
+Pr1 = Pt * (lambda1 / (4 * pi)).^2 .* abs((sqrt(G_los) ./ d_los) + Gamma * (sqrt(G_ref) ./ d_refl) .* exp(-1j * phi1)).^2;
+Pr2 = Pt * (lambda2 / (4 * pi)).^2 .* abs((sqrt(G_los) ./ d_los) + Gamma * (sqrt(G_ref) ./ d_refl) .* exp(-1j * phi2)).^2;
+
+% Convert Power to dB
+Pr1_dB = 10 * log10(Pr1);
+Pr2_dB = 10 * log10(Pr2);
+
+% Plot Results
+figure;
+plot(d, Pr1_dB, 'b', 'LineWidth', 2); hold on;
+plot(d, Pr2_dB, 'r', 'LineWidth', 2);
+grid on;
+xlabel('Distance (m)');
+ylabel('Received Power (dB)');
+title('Two-Ray Ground Reflection Model Comparison: 900 MHz vs 2.4 GHz');
+legend('900 MHz', '2.4 GHz');
