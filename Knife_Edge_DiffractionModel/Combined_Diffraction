@@ -1,0 +1,39 @@
+clc;
+clear;
+close all;
+
+v = linspace(-3, 5, 50);  
+Gd1 = zeros(size(v));  
+Gd2 = zeros(size(v));  
+
+upper_limit = 100;
+
+% Fresnel Diffraction Integral (First Plot)
+for i = 1:length(v)
+    F_v = (1 + 1j) / 2 * integral(@(t) exp((-1j * pi * t.^2) / 2), v(i), upper_limit, 'ArrayValued', true);
+    Gd1(i) = 20 * log10(abs(F_v));
+end
+
+% Knife-edge Diffraction Gain (Second Plot)
+for i = 1:length(v)
+    if v(i) <= -1
+        Gd2(i) = 0;
+    elseif -1 < v(i) && v(i) <= 0
+        Gd2(i) = 20 * log10(0.5 - 0.62 * v(i));
+    elseif 0 < v(i) && v(i) <= 1
+        Gd2(i) = 20 * log10(0.5 * exp(-0.95 * v(i)));
+    elseif 1 < v(i) && v(i) <= 2.4
+        Gd2(i) = 20 * log10(0.4 - sqrt(0.1184 - (0.38 - 0.1 * v(i))^2));
+    else  
+        Gd2(i) = 20 * log10(0.225 / v(i));
+    end
+end
+
+% Combine both plots in one figure
+figure;
+plot(v, Gd1, 'r', 'LineWidth', 1.5); hold on;
+plot(v, Gd2, 'b', 'LineWidth', 1.5);
+grid on;
+xlabel('\nu'); ylabel('G_d (dB)');
+title('Diffraction Gain Comparison');
+legend('Fresnel Diffraction', 'Knife-edge Diffraction');
