@@ -1,0 +1,31 @@
+clc;
+clear;
+close all;
+
+% Define the Fresnel diffraction parameter (v) from -5 to +5
+v = linspace(-5, 5, 1000);  
+Gd = zeros(size(v));         % Initialize the diffraction gain array
+
+% Loop to calculate diffraction gain based on the value of v
+for i = 1:length(v)
+    if v(i) <= -1
+        Gd(i) = 0;
+    elseif -1 < v(i) && v(i) <= 0
+        Gd(i) = 20 * log10(0.5 - 0.62 * v(i));
+    elseif 0 < v(i) && v(i) <= 1
+        Gd(i) = 20 * log10(0.5 * exp(-0.95 * v(i)));
+    elseif 1 < v(i) && v(i) <= 2.4
+        Gd(i) = 20 * log10(0.4 - sqrt(0.1184 - (0.38 - 0.1 * v(i))^2));
+    else  
+        Gd(i) = 20 * log10(0.225 / v(i));
+    end
+end
+
+% Plot the diffraction gain vs Fresnel diffraction parameter
+figure;
+plot(v, Gd, 'b', 'LineWidth', 1.5);
+grid on;
+xlabel('Fresnel Diffraction Parameter (\nu)');
+ylabel('Knife-edge Diffraction Gain (G_d, dB)');
+title('Diffraction Gain vs Fresnel Diffraction Parameter');
+legend('G_d(dB) vs \nu');
