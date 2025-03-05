@@ -1,0 +1,33 @@
+clc;
+clear;
+close all;
+
+v = 30;
+fc_1 = 2.4e9;
+fc_2 = 9e8;
+fc_3=5e9
+c = 3e8;
+lambda1 = c / fc_1;
+lambda2 = c / fc_2;
+lambda3 = c / fc_3;
+t = linspace(0, 10, 1000);
+
+theta_increasing = linspace(0, 180, length(t));
+
+fd_increasing_1 = (v * cosd(theta_increasing)) / lambda1;
+
+fd_increasing_2 = (v * cosd(theta_increasing)) / lambda2;
+
+fd_increasing_3 = (v * cosd(theta_increasing)) / lambda3;
+
+figure;
+plot(t, fd_increasing_1, 'b', 'LineWidth', 1.5);
+hold on;
+plot(t, fd_increasing_2, 'r', 'LineWidth', 1.5);
+hold on;
+plot(t, fd_increasing_3, 'g', 'LineWidth', 1.5);
+grid on;
+xlabel('Time (s)');
+ylabel('Doppler Shift (Hz)');
+title('Doppler Effect Simulation');
+legend('2.4Ghz', '900Mhz', '5GHz');
