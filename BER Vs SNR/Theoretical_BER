@@ -1,0 +1,35 @@
+clc;
+clear all;
+close all;
+
+% Simulation parameters
+N = 10^6; % Number of bits
+Eb_N0_dB = -3:35; % Eb/N0 range in dB
+EbN0Lin = 10.^(Eb_N0_dB / 10); % Convert to linear scale
+
+% Generate random binary data (0s and 1s)
+ip = rand(1, N) > 0.5; 
+
+% BPSK modulation: 0 → -1, 1 → +1
+s = 2 * ip - 1; 
+
+% --- Theoretical BER Calculations ---
+% AWGN channel BER (using erfc instead of qfunc)
+BER_AWGN = 0.5 * erfc(sqrt(EbN0Lin)); 
+
+% Rayleigh fading channel BER (theoretical formula)
+BER_Rayleigh = 0.5 * (1 - sqrt(EbN0Lin ./ (EbN0Lin + 1))); 
+
+% --- Plot Results ---
+figure;
+semilogy(Eb_N0_dB, BER_AWGN, 'b-o', 'LineWidth', 1.5, 'MarkerSize', 6); 
+hold on;
+semilogy(Eb_N0_dB, BER_Rayleigh, 'r-^', 'LineWidth', 1.5, 'MarkerSize', 6);
+
+% Formatting the plot
+grid on;
+axis([-3 35 1e-6 0.5]);
+legend('AWGN (Theoretical)', 'Rayleigh Fading (Theoretical)', 'Location', 'Best');
+xlabel('Eb/N0 (dB)');
+ylabel('Bit Error Rate (BER)');
+title('Theoretical BER Comparison: AWGN vs. Rayleigh Fading Channels');
