@@ -1,0 +1,32 @@
+clc;
+clear all;
+close all;
+
+N = 10^6; % Number of bits or symbols
+
+% Transmitter
+ip = rand(1, N) > 0.5; % Generating 0,1 with equal probability
+s = 2 * ip - 1; % BPSK modulation: 0 -> -1, 1 -> +1
+
+Eb_N0_dB = -3:35; % Eb/N0 range in dB
+EbN0Lin = 10.^(Eb_N0_dB / 10); % Linear scale
+
+% Actual BER for AWGN (using erfc instead of qfunc)
+actualBerAWGN = 0.5 * erfc(sqrt(EbN0Lin)/sqrt(2)); % Equivalent to qfunc(sqrt(EbN0Lin))
+
+% Approximate BER for AWGN (using exponential approximation)
+approxBerAWGN = 0.5 * exp(-EbN0Lin / 2); % Using Pe = (1/2) * exp(-SNR/2)
+
+% Plotting the results
+figure;
+semilogy(Eb_N0_dB, actualBerAWGN, 'bo-', 'LineWidth', 2); % Actual BER (AWGN)
+hold on;
+semilogy(Eb_N0_dB, approxBerAWGN, 'r--', 'LineWidth', 2); % Approximate BER (AWGN)
+
+% Plot settings
+grid on;
+axis([-3 35 10^-6 0.5]);
+legend('Actual BER (AWGN)', 'Approx. BER (AWGN)', 'Location', 'Best');
+xlabel('Eb/No (dB)');
+ylabel('Bit Error Rate (BER)');
+title('Approximate vs. Actual BER for AWGN Channel');
