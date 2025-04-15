@@ -1,0 +1,48 @@
+clc;
+clear all;
+close all;
+
+k = 25;    % Fixed number of channels per cell
+N_list = [3 4 7];    % Cluster sizes
+M = 4;    % Number of reuse clusters
+
+users_without_reuse = k;    % Single cell, no reuse
+
+users_with_reuse_list = zeros(size(N_list));
+S_list = zeros(size(N_list));
+
+for i = 1:length(N_list)
+   N = N_list(i);
+   S = k * N;    % Total channels in one cluster
+   total_cells = M * N;
+   users_with_reuse_list(i) = total_cells * k;
+   S_list(i) = S;
+end
+
+% Bar plot visualization
+labels = {'Without Reuse', 'N=3', 'N=4', 'N=7'};
+bar_data = [users_without_reuse users_with_reuse_list];
+
+figure;
+h = bar(bar_data, 0.5);
+set(gca, 'XTick', 1:length(bar_data));
+set(gca, 'XTickLabel', labels);
+ylabel('Number of Users Served');
+ylim([0 800]);
+title('Effect of Frequency Reuse on User Capacity');
+grid on;
+
+% Annotate values
+values = [users_without_reuse users_with_reuse_list];
+for i = 1:length(values)
+    text(i, values(i) + 50, ['Users: ' num2str(values(i))], ...
+    'HorizontalAlignment','center');
+end
+
+% Print Table to Console
+fprintf(' Frequency Reuse Comparison (Fixed k = %d channels/cell) \n', k);
+fprintf('Without Reuse => Users Served = %d\n', users_without_reuse);
+for i = 1:length(N_list)
+    fprintf('With Reuse (N = %d) => Total Channels = %d, Users Served = %d\n', ...
+    N_list(i), S_list(i), users_with_reuse_list(i));
+end
