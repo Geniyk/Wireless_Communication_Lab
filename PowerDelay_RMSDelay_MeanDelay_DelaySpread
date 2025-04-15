@@ -1,0 +1,38 @@
+
+%% Aim - Power Delay Profile 
+clc; clear all; close all; 
+t = 0:5; 
+gd = zeros(size(t)); 
+% Compute gd values (in dB) 
+for i = 1:length(t) 
+if(t(i) == 0) 
+gd(i) = -20; 
+elseif(t(i) == 1) 
+gd(i) = -10; 
+elseif(t(i) == 3) 
+gd(i) = 0; 
+elseif(t(i) == 5) 
+gd(i) = -10; 
+end 
+end 
+g_linear = 10.^(gd/10); 
+% Mean Delay 
+t_avg = sum(g_linear .* t) / sum(g_linear); 
+% RMS Delay Spread 
+sigma = sqrt(sum(g_linear .*(t_avg - t).^2) / sum(g_linear)); 
+% Delay Spread 
+DelaySpread = max(t) - min(t); 
+% Display Results 
+disp(['Mean Delay = ', num2str(t_avg)]); 
+disp(['RMS Delay Spread = ', num2str(sigma)]); 
+disp(['Delay Spread = ', num2str(DelaySpread)]); 
+% Plot Power Delay Profile 
+figure; 
+gd_pos = -gd; 
+stem(t, gd_pos, 'r', 'LineWidth', 1.5); 
+grid on; 
+xlabel('Delay (τ)'); 
+ylabel('Gain (dB)'); 
+title('Power Delay Profile'); 
+xlim([min(t)-1 max(t)+1]); 
+ylim([min(gd_pos)-1 max(gd_pos)+1]); 
